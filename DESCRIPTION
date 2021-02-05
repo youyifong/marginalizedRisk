@@ -4,7 +4,7 @@ LazyData: yes
 Version: 2021.2-4
 Title: Estimating Marginalized Risk
 Authors@R: c(person("Youyi", "Fong", role = "cre", email = "youyifong@gmail.com"), person("Peter", "Gilbert", role = "aut", email = "pgilbert@scharp.org"), person("Marco", "Carone", role = "aut", email = "mcarone@uw.edu") )
-Depends: R (>= 3.6)
+Depends: R (>= 4.0)
 Imports: 
 Suggests: RUnit, R.rsp, survival
 Description: Estimates risk as a function of a marker by integrating over other covariates in a conditional risk model.
