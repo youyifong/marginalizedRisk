@@ -39,7 +39,7 @@ marginalized.risk.cat=function(fit.risk, marker.name, data, weights=rep(1, nrow(
                 dat.tmp.mrc[[time.var]]=t
                 risks=sapply(ss, function(s) {        
                     dat.tmp.mrc[[marker.name]]=s    
-                    risks = 1 - exp(-predict(fit.risk, newdata=dat.tmp.mrc, type="expected"))# coxph survival prob
+                    risks = 1 - exp(-predict(fit.risk, newdata=dat.tmp.mrc, type="expected", reference="zero"))# coxph survival prob
                     sum(weights * risks) / sum(weights)
                 })
             })
@@ -54,7 +54,7 @@ marginalized.risk.cat=function(fit.risk, marker.name, data, weights=rep(1, nrow(
             dat.tmp.mrc[[time.var]]=t        
             risks=sapply(ss, function(s) {
                 dat.tmp.mrc[[marker.name]]=s    
-                risks = 1 - exp(-predict(fit.risk, newdata=dat.tmp.mrc, type="expected")) # coxph survival prob
+                risks = 1 - exp(-predict(fit.risk, newdata=dat.tmp.mrc, type="expected", reference="zero")) # coxph survival prob
                 sum(weights * risks) / sum(weights)    
             })
             names(risks)=levels(ss)
@@ -81,7 +81,7 @@ marginalized.risk.cont=function(fit.risk, marker.name, data, weights=rep(1, nrow
             predict(fit.risk, newdata=dat.tmp.mri, type="response")
         } else {
             # coxph survival prob
-            1 - exp(-predict(fit.risk, newdata=dat.tmp.mri, type="expected"))
+            1 - exp(-predict(fit.risk, newdata=dat.tmp.mri, type="expected", reference="zero"))
         }
         #if(any(is.na(risks))) stop("NA's found in fit.risk")
         
