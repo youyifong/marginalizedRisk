@@ -20,3 +20,6 @@
 
 2021.7.26
     * change reference in predict coxph
+
+2021.7.27
+    * revert the last change because reference makes no difference for expected type
