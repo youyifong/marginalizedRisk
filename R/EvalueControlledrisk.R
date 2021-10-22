@@ -1,5 +1,5 @@
 # equation 4
-E.value=function(rr) { rr1=1/rr; rr1 + sqrt(rr1 * (rr1-1)) }
+E.value=function(rr) {rr1=1/rr; ifelse(rr1<1, 1, rr1 + sqrt(rr1 * (rr1-1)) ) }
 
 # equation above equation 5
 bias.factor=function(RRud, RReu) RRud*RReu/(RRud+RReu-1)

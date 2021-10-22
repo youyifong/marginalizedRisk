@@ -23,3 +23,6 @@
 
 2021.7.27
     * revert the last change because reference makes no difference for expected type
+
+2021.10.22
+	* chanage how E.value handles r>1
