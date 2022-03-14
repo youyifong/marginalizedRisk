@@ -14,14 +14,14 @@ marginalized.risk.threshold=function(formula, marker.name, data, weights=rep(1, 
         
     risks=sapply (ss, function(s) {    
         tmp=data[data[[marker.name]]>=s, ]
-        fit.risk=survival::coxph(formula, tmp, weights=wt999, model=TRUE)         
+        fit.risk.1=survival::coxph(formula, tmp, weights=wt999, model=TRUE)         
         
         tmp=data # g-computation formula sums over all ph2 data instead of [data[[marker.name]]>=s,]
         tmp[[time.var]]=t
         # need to wrap predict in try because when there are no cases, even model=T won't prevent errors: 
-        #           Error in predict.coxph(fit.risk, type = "expected") : 
+        #           Error in predict.coxph(fit.risk.1, type = "expected") : 
         #               Data is not the same size as it was in the original fit
-        pred=try(predict(fit.risk, newdata=tmp, type="expected"), silent=T)
+        pred=try(predict(fit.risk.1, newdata=tmp, type="expected"), silent=T)
         #
         if (class(pred) != "try-error" & all(!is.na(pred))) {
             weighted.mean(1 - exp(-pred), tmp$wt999)
