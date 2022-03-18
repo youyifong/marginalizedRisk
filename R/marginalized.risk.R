@@ -1,14 +1,14 @@
 # only pass ph2 data to these functions
-marginalized.risk=function(fit.risk, marker.name, data, categorical.s, weights=rep(1, nrow(data)), t=NULL, ss=NULL, verbose=FALSE) {
+marginalized.risk=function(fit.risk, marker.name, data, categorical.s, weights=rep(1, nrow(data)), t=NULL, ss=NULL, verbose=FALSE, t.end=NULL) {
     if(categorical.s) {
-        marginalized.risk.cat  (fit.risk, marker.name, data, weights=weights, t=t, verbose=verbose) 
+        marginalized.risk.cat  (fit.risk, marker.name, data, weights=weights, t=t, verbose=verbose, t.end=t.end) 
     } else {
         marginalized.risk.cont (fit.risk, marker.name, data, weights=weights, t=t, ss=ss, verbose=verbose) 
     }
 }
 
 # categorical markers
-marginalized.risk.cat=function(fit.risk, marker.name, data, weights=rep(1, nrow(data)), t=NULL, verbose=FALSE) {  
+marginalized.risk.cat=function(fit.risk, marker.name, data, weights=rep(1, nrow(data)), t=NULL, verbose=FALSE, t.end=NULL) {  
     
     if("coxph" %in% class(fit.risk)) {
         time.var=as.character(fit.risk$terms[[2]][[2]])
@@ -34,6 +34,7 @@ marginalized.risk.cat=function(fit.risk, marker.name, data, weights=rep(1, nrow(
         if (is.null(t)) {
             # return risk versus time
             tt=sort(unique(data[[time.var]][data[[y.var]]==1]))        
+            if (!is.null(t.end)) tt=c(tt, t.end)
             risks=sapply(tt, function (t) {
                 dat.tmp.mrc=data
                 dat.tmp.mrc[[time.var]]=t
