@@ -91,3 +91,33 @@ marginalized.risk.cont=function(fit.risk, marker.name, data, weights=rep(1, nrow
     
     if (ss.is.null) cbind(marker=ss, prob=risks) else risks
 }
+
+
+
+marginalized.risk.cont.2=function(fit.risk, marker.name, data, weights=rep(1, nrow(data)), t, ss, marker.name.2, s.2, verbose=FALSE) {
+        
+    is.coxph=FALSE
+    if (length(fit.risk$terms[[2]])==3) {
+        # presume to be coxph
+        is.coxph=TRUE
+        time.var=fit.risk$terms[[2]][[2]]
+        data[[time.var]]=t
+    } 
+    
+    data[[marker.name.2]]=s.2
+    
+    risks=sapply(ss, function(s) {
+        data[[marker.name]]=s    
+        risks = if(is.coxph) {
+            1 - exp(-predict(fit.risk, newdata=data, type="expected"))
+        } else {
+            # glm
+            predict(fit.risk, newdata=data, type="response")
+        }
+        #if(any(is.na(risks))) stop("NA's found in fit.risk")
+        
+        sum(weights * risks) / sum(weights)    
+    })
+    
+    risks
+}
