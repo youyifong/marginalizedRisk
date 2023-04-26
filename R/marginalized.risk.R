@@ -1,4 +1,4 @@
-# only pass ph2 data to these functions
+1# only pass ph2 data to these functions
 marginalized.risk=function(fit.risk, marker.name, data, categorical.s, weights=rep(1, nrow(data)), t=NULL, ss=NULL, verbose=FALSE, t.end=NULL) {
     if(categorical.s) {
         marginalized.risk.cat  (fit.risk, marker.name, data, weights=weights, t=t, verbose=verbose, t.end=t.end) 
