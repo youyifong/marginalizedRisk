@@ -29,3 +29,6 @@
 
 2022.7.26
 	* add marginalized.risk.cont.2
+
+2023.4.26
+	* add exception handling in marginalized.risk.threshold	
