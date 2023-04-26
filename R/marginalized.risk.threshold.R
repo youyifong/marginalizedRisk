@@ -13,7 +13,6 @@ marginalized.risk.threshold=function(formula, marker.name, data, weights=rep(1, 
     if (ss.is.null) ss=quantile(data[[marker.name]], seq(0,.9,by=0.05))
         
     risks=sapply (ss, function(s) {    
-        myprint(s)
         tmp=data[data[[marker.name]]>=s, ]
         fit.risk.1=try(survival::coxph(formula, tmp, weights=wt999, model=TRUE))
         if (inherits(fit.risk.1, "try-error")) return (NA)
@@ -24,7 +23,6 @@ marginalized.risk.threshold=function(formula, marker.name, data, weights=rep(1, 
         #           Error in predict.coxph(fit.risk.1, type = "expected") : 
         #               Data is not the same size as it was in the original fit
         pred=try(predict(fit.risk.1, newdata=tmp, type="expected"), silent=T)
-        myprint(pred)
         #
         if (class(pred) != "try-error" & all(!is.na(pred))) {
             weighted.mean(1 - exp(-pred), tmp$wt999)
