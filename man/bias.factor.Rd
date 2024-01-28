@@ -20,15 +20,12 @@ controlled.risk.bias.factor(ss, s.cent, s1, s2, RRud)
 \arguments{
 
   \item{RRud}{
-%%     ~~Describe \code{RRud} here~~
-}
+RRud}
   \item{RReu}{
-%%     ~~Describe \code{RReu} here~~
-}
+RReu}
 
   \item{rr}{
-%%     ~~Describe \code{rr} here~~
-}
+rr}
 
   \item{ss}{
 A vector of marker values
@@ -40,8 +37,7 @@ Central marker value
 s1 and s2 are a pair of marker values for which we set a RRud.
 }
   \item{s2}{
-%%     ~~Describe \code{s2} here~~
-}
+s2}
 }
 \details{
 These three functions constitute an implementation of the core functionality in Gilbert et al. (2020). For examples on how to use these functions, see the code for Gilbert et al. at https://github.com/youyifong/CoPveryhighVE \cr

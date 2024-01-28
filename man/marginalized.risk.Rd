@@ -3,6 +3,7 @@
 \alias{marginalizedRisk}
 \alias{marginalized.risk.cat}
 \alias{marginalized.risk.cont}
+\alias{marginalized.risk.cont.2}
 \title{
 Compute Maringalized Risk
 }
@@ -11,14 +12,18 @@ Computes risk of disease as a function of marker s by marginalizedizing over a c
 }
 \usage{
 
-marginalized.risk(fit.risk, marker.name, data, categorical.s, 
-    weights = rep(1,nrow(data)), t = NULL, ss = NULL, verbose = FALSE)
-
+marginalized.risk(fit.risk, marker.name, data, categorical.s, weights =
+                 rep(1, nrow(data)), t = NULL, ss = NULL, verbose =
+                 FALSE, t.end = NULL)
+                 
 marginalized.risk.cont(fit.risk, marker.name, data, 
     weights = rep(1, nrow(data)), t=NULL, ss = NULL, verbose = FALSE)
 
-marginalized.risk.cat(fit.risk, marker.name, data, 
-    weights = rep(1, nrow(data)), t =NULL, verbose = FALSE)
+marginalized.risk.cont.2(fit.risk, marker.name, data, 
+  weights=rep(1, nrow(data)), t, ss, marker.name.2, s.2, verbose=FALSE) 
+
+marginalized.risk.cat(fit.risk, marker.name, data, weights = rep(1,
+                 nrow(data)), t = NULL, verbose = FALSE, t.end = NULL)
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -30,17 +35,26 @@ A regression object where the outcome is risk of disease, e.g. y~Z+marker. Need 
   \item{marker.name}{
 string
 }
+  \item{marker.name.2}{
+string
+}
   \item{data}{
 A data frame containing the phase 2 data
 }
   \item{ss}{
 A vector of marker values
 }
+  \item{s.2}{
+s.2
+}
   \item{weights}{
 Inverse prob sampling weight, optional
 }
   \item{t}{
 If fit.risk is Cox regression, t is the time at which distribution function will be assessed
+}
+  \item{t.end}{
+t.end
 }
   \item{categorical.s}{
 TRUE if the marker is categorical, FALSE otherwise

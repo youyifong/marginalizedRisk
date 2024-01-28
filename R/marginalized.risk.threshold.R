@@ -24,7 +24,7 @@ marginalized.risk.threshold=function(formula, marker.name, data, weights=rep(1, 
         #               Data is not the same size as it was in the original fit
         pred=try(predict(fit.risk.1, newdata=tmp, type="expected"), silent=T)
         #
-        if (class(pred) != "try-error" & all(!is.na(pred))) {
+        if (!inherits(pred, "try-error") & all(!is.na(pred))) {
             weighted.mean(1 - exp(-pred), tmp$wt999)
         } else {
             # the error we have seen is due to no cases, 0 is a reasonable output
