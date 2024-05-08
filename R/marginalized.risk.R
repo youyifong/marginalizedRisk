@@ -34,7 +34,7 @@ marginalized.risk.cat=function(fit.risk, marker.name, data, weights=rep(1, nrow(
         if (is.null(t)) {
             # return risk versus time
             tt=sort(unique(data[[time.var]][data[[y.var]]==1]))        
-            if (!is.null(t.end)) tt=c(tt, t.end)
+            if (!is.null(t.end)) tt=unique(c(tt, t.end))
             risks=sapply(tt, function (t) {
                 dat.tmp.mrc=data
                 dat.tmp.mrc[[time.var]]=t
