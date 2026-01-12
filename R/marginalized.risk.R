@@ -40,7 +40,15 @@ marginalized.risk.cat=function(fit.risk, marker.name, data, weights=rep(1, nrow(
                 dat.tmp.mrc[[time.var]]=t
                 risks=sapply(ss, function(s) {        
                     dat.tmp.mrc[[marker.name]]=s    
-                    risks = 1 - exp(-predict(fit.risk, newdata=dat.tmp.mrc, type="expected"))# coxph survival prob
+                    
+                    # risks = 1 - exp(-predict(fit.risk, newdata=dat.tmp.mrc, type="expected"))# coxph survival prob
+                    # in survey 4.4, the above is not allowed, instead, we need
+                    # 1. Generate the survival curves for the new data
+                    sf <- survfit(fit.risk, newdata = dat.tmp.mrc)
+                    # 2. Extract the survival probability for each person at their specific time
+                    predicted_surv <- diag(sf$surv[match(dat.tmp.mrc[[time.var]], sf[[time.var]]), ])
+                    risks = 1 - predicted_surv
+                    
                     sum(weights * risks) / sum(weights)
                 })
             })
@@ -55,7 +63,15 @@ marginalized.risk.cat=function(fit.risk, marker.name, data, weights=rep(1, nrow(
             dat.tmp.mrc[[time.var]]=t        
             risks=sapply(ss, function(s) {
                 dat.tmp.mrc[[marker.name]]=s    
-                risks = 1 - exp(-predict(fit.risk, newdata=dat.tmp.mrc, type="expected")) # coxph survival prob
+                
+                # risks = 1 - exp(-predict(fit.risk, newdata=dat.tmp.mrc, type="expected"))# coxph survival prob
+                # in survey 4.4, the above is not allowed, instead, we need
+                # 1. Generate the survival curves for the new data
+                sf <- survfit(fit.risk, newdata = dat.tmp.mrc)
+                # 2. Extract the survival probability for each person at their specific time
+                predicted_surv <- diag(sf$surv[match(dat.tmp.mrc[[time.var]], sf[[time.var]]), ])
+                risks = 1 - predicted_surv
+                
                 sum(weights * risks) / sum(weights)    
             })
             names(risks)=levels(ss)
@@ -78,11 +94,18 @@ marginalized.risk.cont=function(fit.risk, marker.name, data, weights=rep(1, nrow
     risks=sapply(ss, function(s) {
         dat.tmp.mri[[marker.name]]=s    
         risks = if(is.null(t)) {
-            # glm
-            predict(fit.risk, newdata=dat.tmp.mri, type="response")
+          # glm
+          predict(fit.risk, newdata=dat.tmp.mri, type="response")
         } else {
-            # coxph survival prob
-            1 - exp(-predict(fit.risk, newdata=dat.tmp.mri, type="expected"))
+          # survival prob
+          # 1 - exp(-predict(fit.risk, newdata=dat.tmp.mri, type="expected"))
+          # in survey 4.4, the above is not allowed, instead, we need
+          # 1. Generate the survival curves for the new data
+          sf <- survfit(fit.risk, newdata = dat.tmp.mri)
+          # 2. Extract the survival probability for each person at their specific time
+          predicted_surv <- diag(sf$surv[match(dat.tmp.mrc[[time.var]], sf[[time.var]]), ])
+          1 - predicted_surv
+          
         }
         #if(any(is.na(risks))) stop("NA's found in fit.risk")
         
@@ -109,7 +132,14 @@ marginalized.risk.cont.2=function(fit.risk, marker.name, data, weights=rep(1, nr
     risks=sapply(ss, function(s) {
         data[[marker.name]]=s    
         risks = if(is.coxph) {
-            1 - exp(-predict(fit.risk, newdata=data, type="expected"))
+          # 1 - exp(-predict(fit.risk, newdata=data, type="expected"))
+          # in survey 4.4, the above is not allowed, instead, we need
+          # 1. Generate the survival curves for the new data
+          sf <- survfit(fit.risk, newdata = data)
+          # 2. Extract the survival probability for each person at their specific time
+          predicted_surv <- diag(sf$surv[match(dat.tmp.mrc[[time.var]], sf[[time.var]]), ])
+          1 - predicted_surv
+          
         } else {
             # glm
             predict(fit.risk, newdata=data, type="response")
