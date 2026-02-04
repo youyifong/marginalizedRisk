@@ -90,14 +90,8 @@ marginalized.risk.cat=function(fit.risk, marker.name, data, weights=rep(1, nrow(
             risks=sapply(ss, function(s) {
                 dat.tmp.mrc[[marker.name]]=s    
                 
-                # risks = 1 - exp(-predict(fit.risk, newdata=dat.tmp.mrc, type="expected"))# coxph survival prob
-                # in survey 4.4, the above is not allowed, instead, we need
-                # 1. Generate the survival curves for the new data
-                sf <- survfit(fit.risk, newdata = dat.tmp.mrc)
-                # 2. Extract the survival probability for each person at their specific time
-                predicted_surv <- diag(sf$surv[match(dat.tmp.mrc[[time.var]], sf[[time.var]]), ])
-                risks = 1 - predicted_surv
-                
+                risks = 1 - exp(-survival:::predict.coxph(fit.risk, newdata=dat.tmp.mrc, type="expected"))# coxph survival prob
+
                 sum(weights * risks) / sum(weights)    
             })
             names(risks)=levels(ss)
