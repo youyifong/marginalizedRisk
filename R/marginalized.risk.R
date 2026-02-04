@@ -33,28 +33,54 @@ marginalized.risk.cat=function(fit.risk, marker.name, data, weights=rep(1, nrow(
         # coxph or svycoxph
         if (is.null(t)) {
             # return risk versus time
-            tt=sort(unique(data[[time.var]][data[[y.var]]==1]))        
-            if (!is.null(t.end)) tt=unique(c(tt, t.end))
-            risks=sapply(tt, function (t) {
-                dat.tmp.mrc=data
-                dat.tmp.mrc[[time.var]]=t
-                risks=sapply(ss, function(s) {        
-                    dat.tmp.mrc[[marker.name]]=s    
-                    
-                    # risks = 1 - exp(-predict(fit.risk, newdata=dat.tmp.mrc, type="expected"))# coxph survival prob
-                    # in survey 4.4, the above is not allowed, instead, we need
-                    # 1. Generate the survival curves for the new data
-                    sf <- survfit(fit.risk, newdata = dat.tmp.mrc)
-                    # 2. Extract the survival probability for each person at their specific time
-                    predicted_surv <- diag(sf$surv[match(dat.tmp.mrc[[time.var]], sf[[time.var]]), ])
-                    risks = 1 - predicted_surv
-                    
-                    sum(weights * risks) / sum(weights)
-                })
+            
+            # system.time({
+            # tt=sort(unique(data[[time.var]][data[[y.var]]==1]))        
+            # if (!is.null(t.end)) tt=unique(c(tt, t.end))
+            # risks=sapply(tt, function (t) {
+            #     dat.tmp.mrc=data
+            #     dat.tmp.mrc[[time.var]]=t
+            #     risks=sapply(ss, function(s) {        
+            #         dat.tmp.mrc[[marker.name]]=s    
+            #         
+            #         # from survey 4.1-1 to 4.2-1, predict.svycoxph changed from
+            #         # type=c("lp", "risk", "expected", "terms","curve"),
+            #         # to 
+            #         # type=c("lp", "risk", "terms","curve"),
+            #         
+            #         # one fix is to change predict to survival:::predict.coxph, which gives the same results
+            #         risks = 1 - exp(-survival:::predict.coxph(fit.risk, newdata=dat.tmp.mrc, type="expected"))# coxph survival prob
+            #         
+            #         sum(weights * risks) / sum(weights)
+            #     })
+            # })
+            # risks=t(risks)
+            # colnames(risks)=as.character(ss)        
+            # resa=list(time=tt, risk=risks)
+            # })
+            
+            # system.time({
+            # alternatively, the curve type can be used to speed up 10x
+            # resb differs from resa in the support of time. in resb, time includes both censoring and events, but not t.end
+            risks=sapply(ss, simplify="array", function(s) {        
+              dat.tmp.mrc=data
+              dat.tmp.mrc[[marker.name]]=s    
+              
+              risks = predict(fit.risk, newdata=dat.tmp.mrc, type="curve")
+              
+              tt = sapply(risks, function (x) x$time)[,1]
+              risks = mysapply(risks, function (x) x$surv)
+              
+              cbind(tt, colSums(weights * risks) / sum(weights))
             })
-            risks=t(risks)
-            colnames(risks)=as.character(ss)        
-            list(time=tt, risk=risks)
+            resb=list(time=risks[,"tt",1], risk=risks[,2,])
+            # })
+            
+            # par(mfrow=c(1,2))
+            # mymatplot(resa$time, resa$risk)
+            # mymatplot(resb$time, 1-resb$risk, add=T)
+            
+            resb
             
         } else {
             if (verbose) print("return risk at time t")
