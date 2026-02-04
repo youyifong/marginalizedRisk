@@ -1,6 +1,7 @@
 Package: marginalizedRisk
 LazyLoad: yes
-Version: 2024.3-25
+Version: 2026.2-4
+Date: 2026-02-04
 Title: Estimating Marginalized Risk
 Authors@R: c(person("Youyi", "Fong", role = "cre", email = "youyifong@gmail.com"), person("Peter", "Gilbert", role = "aut", email = "pgilbert@scharp.org"), person("Marco", "Carone", role = "aut", email = "mcarone@uw.edu") )
 Depends: R (>= 4.0)
